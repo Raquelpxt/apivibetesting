@@ -1,0 +1,1381 @@
+{
+  "info": {
+    "_postman_id": "1ae4d735-924a-434d-9b69-243a9ff00150",
+    "name": "TechShop API Tests",
+    "description": "API tests for TechShop API based on swagger.json and test-ideas.md",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-09-08T08:27:03.000Z",
+    "updatedAt": "2026-09-08T08:43:00.000Z",
+    "lastUpdatedBy": "57988667",
+    "uid": "57988667-1ae4d735-924a-434d-9b69-243a9ff00150"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Token returned in response\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "    pm.collectionVariables.set(\"authToken\", jsonData.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "f6c09545-9e4a-40dd-8980-e27392c28206",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@techshop.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-f6c09545-9e4a-40dd-8980-e27392c28206"
+        },
+        {
+          "name": "Login - Invalid Credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "dd6b6919-e650-48e6-b359-cd454174884c",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@techshop.com\",\n  \"password\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-dd6b6919-e650-48e6-b359-cd454174884c"
+        },
+        {
+          "name": "Login - Missing Required Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "9fb97254-c4f6-4cc8-beff-f5cc95bb5da6",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@techshop.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-9fb97254-c4f6-4cc8-beff-f5cc95bb5da6"
+        }
+      ],
+      "id": "ec85a119-cbf9-4e1e-9957-9ea28c4412ab",
+      "createdAt": "2026-09-08T08:27:03.000Z",
+      "updatedAt": "2026-09-08T08:27:03.000Z",
+      "uid": "57988667-ec85a119-cbf9-4e1e-9957-9ea28c4412ab"
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns array of products\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "cf5373ca-2e6f-4004-aacb-3469e5918996",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-cf5373ca-2e6f-4004-aacb-3469e5918996"
+        },
+        {
+          "name": "Get Products - Category Filter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Filtered category matches query\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "57d35af9-bf19-4d7f-90d8-3deb047cc98b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?category=computers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "computers"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-57d35af9-bf19-4d7f-90d8-3deb047cc98b"
+        },
+        {
+          "name": "Get Products - Non-existent Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns empty array for unknown category\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array').that.is.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "bcc74554-6298-4fa0-a2c7-218e9f0d4a6a",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?category=unknown",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "unknown"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-bcc74554-6298-4fa0-a2c7-218e9f0d4a6a"
+        },
+        {
+          "name": "Get Products - Invalid Category Parameter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "a6c2370c-5502-4c3e-942d-8c7754d1f730",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?category=12345",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "12345"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-a6c2370c-5502-4c3e-942d-8c7754d1f730"
+        },
+        {
+          "name": "Get Single Product - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns product details schema\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id', 1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "02b08a1f-450c-428a-8330-d02ab4354e88",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-02b08a1f-450c-428a-8330-d02ab4354e88"
+        },
+        {
+          "name": "Get Single Product - Non-existent ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "9121a35f-587c-4443-98d3-0324c6a3291b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "99999"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-9121a35f-587c-4443-98d3-0324c6a3291b"
+        },
+        {
+          "name": "Get Single Product - Invalid ID Format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request or 404 Not Found\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "ad6ce84a-180a-413a-9295-d0dec1685598",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "abc"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-ad6ce84a-180a-413a-9295-d0dec1685598"
+        }
+      ],
+      "id": "4711d67a-b513-4b89-ad0d-c3d42856753f",
+      "createdAt": "2026-09-08T08:27:03.000Z",
+      "updatedAt": "2026-09-08T08:27:03.000Z",
+      "uid": "57988667-4711d67a-b513-4b89-ad0d-c3d42856753f"
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns cart items and total\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('items');",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "379bb69f-01ac-4661-b3ff-a134054eccf7",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-379bb69f-01ac-4661-b3ff-a134054eccf7"
+        },
+        {
+          "name": "Get Cart - Missing Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "74179d42-0938-4f52-a3d0-3bc14d384cb7",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-74179d42-0938-4f52-a3d0-3bc14d384cb7"
+        },
+        {
+          "name": "Get Cart - Invalid Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "623af8e2-eaa0-4c00-94aa-6bf2e132760a",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid_token_123"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-623af8e2-eaa0-4c00-94aa-6bf2e132760a"
+        },
+        {
+          "name": "Add to Cart - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "898c6e1b-859d-41d4-82d0-068a8b401a24",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-898c6e1b-859d-41d4-82d0-068a8b401a24"
+        },
+        {
+          "name": "Add to Cart - Missing Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "47f4d964-480f-48be-92bd-d78626d0f1bd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-47f4d964-480f-48be-92bd-d78626d0f1bd"
+        },
+        {
+          "name": "Add to Cart - Non-existent Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "f8c80315-f8a6-47f8-8c13-d586b28dcdd5",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 99999,\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-f8c80315-f8a6-47f8-8c13-d586b28dcdd5"
+        },
+        {
+          "name": "Add to Cart - Invalid Quantity",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "0694667b-5ec4-4418-87af-3dabfcbf58bc",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-0694667b-5ec4-4418-87af-3dabfcbf58bc"
+        },
+        {
+          "name": "Update Cart Item - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "2a79670d-999d-4394-88a4-dd9e9428bb31",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-2a79670d-999d-4394-88a4-dd9e9428bb31"
+        },
+        {
+          "name": "Update Cart Item - Missing Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "3cd87e45-48c1-4134-9e54-89337e4845be",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-3cd87e45-48c1-4134-9e54-89337e4845be"
+        },
+        {
+          "name": "Update Cart Item - Non-existent Item ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "7ee5a4f8-2a93-40f4-bfc6-fcadb888e02d",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "99999"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-7ee5a4f8-2a93-40f4-bfc6-fcadb888e02d"
+        },
+        {
+          "name": "Update Cart Item - Invalid Quantity",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "6a6aeae3-201b-4233-807f-e50089e5f3c1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": -1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-6a6aeae3-201b-4233-807f-e50089e5f3c1"
+        },
+        {
+          "name": "Remove Cart Item - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "c35af816-2cea-48f9-baee-ab7ba2545103",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-c35af816-2cea-48f9-baee-ab7ba2545103"
+        },
+        {
+          "name": "Remove Cart Item - Missing Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "e31f8c43-c1f4-412e-9e85-0931cb7e4d06",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cart/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-e31f8c43-c1f4-412e-9e85-0931cb7e4d06"
+        },
+        {
+          "name": "Remove Cart Item - Non-existent Item ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "3d7629f0-8a02-46e4-95fc-da22add9896c",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cart",
+                "99999"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-3d7629f0-8a02-46e4-95fc-da22add9896c"
+        }
+      ],
+      "id": "2a4b2ca8-d709-4f77-86ca-a81c17401442",
+      "createdAt": "2026-09-08T08:27:03.000Z",
+      "updatedAt": "2026-09-08T08:27:03.000Z",
+      "uid": "57988667-2a4b2ca8-d709-4f77-86ca-a81c17401442"
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get Orders - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns user order history array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "8bf7cf21-0a08-4428-98b8-f93affbcb338",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-8bf7cf21-0a08-4428-98b8-f93affbcb338"
+        },
+        {
+          "name": "Get Orders - Missing Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "aa2cebd1-519d-4350-a800-738144d7f074",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-aa2cebd1-519d-4350-a800-738144d7f074"
+        },
+        {
+          "name": "Get Orders - Malformed Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "76644759-8c37-4c9b-b3fb-febdc790488b",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer malformed_token_123"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-76644759-8c37-4c9b-b3fb-febdc790488b"
+        },
+        {
+          "name": "Place Order - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Returns created order record\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "1edb45e6-c189-4701-9663-f9c022965c29",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2\n    }\n  ],\n  \"shipping\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"email\": \"jane@example.com\",\n    \"phone\": \"0412345678\"\n  },\n  \"payment\": {\n    \"cardNumber\": \"4111111111111111\",\n    \"expiryDate\": \"12/28\",\n    \"cvv\": \"123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-1edb45e6-c189-4701-9663-f9c022965c29"
+        },
+        {
+          "name": "Place Order - Missing Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "a8b778ad-823c-424d-8a66-78329e734bf0",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2\n    }\n  ],\n  \"shipping\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"email\": \"jane@example.com\",\n    \"phone\": \"0412345678\"\n  },\n  \"payment\": {\n    \"cardNumber\": \"4111111111111111\",\n    \"expiryDate\": \"12/28\",\n    \"cvv\": \"123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-a8b778ad-823c-424d-8a66-78329e734bf0"
+        },
+        {
+          "name": "Place Order - Empty Items Array",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "c0160e9f-e443-4992-9780-2122f149f8fb",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [],\n  \"shipping\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"email\": \"jane@example.com\",\n    \"phone\": \"0412345678\"\n  },\n  \"payment\": {\n    \"cardNumber\": \"4111111111111111\",\n    \"expiryDate\": \"12/28\",\n    \"cvv\": \"123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-c0160e9f-e443-4992-9780-2122f149f8fb"
+        },
+        {
+          "name": "Place Order - Invalid Payment Payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "id": "baf6321a-f683-42cf-adb7-fadd3ec67994",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2\n    }\n  ],\n  \"shipping\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"email\": \"jane@example.com\",\n    \"phone\": \"0412345678\"\n  },\n  \"payment\": {\n    \"cardNumber\": \"1234\",\n    \"expiryDate\": \"01/20\",\n    \"cvv\": \"12\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-09-08T08:27:03.000Z",
+          "updatedAt": "2026-09-08T08:27:03.000Z",
+          "uid": "57988667-baf6321a-f683-42cf-adb7-fadd3ec67994"
+        }
+      ],
+      "id": "c346b22c-8ad4-4c6a-ab73-5964f3c1226e",
+      "createdAt": "2026-09-08T08:27:03.000Z",
+      "updatedAt": "2026-09-08T08:27:03.000Z",
+      "uid": "57988667-c346b22c-8ad4-4c6a-ab73-5964f3c1226e"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ]
+}

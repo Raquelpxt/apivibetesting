@@ -1,0 +1,121 @@
+name: API Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install TechShop API dependencies
+        run: npm install
+        working-directory: techshop-api/broken-app
+
+      - name: Start TechShop API in the background
+        run: node server.js &
+        working-directory: techshop-api/broken-app
+
+      - name: Wait for the server to be ready
+        run: |
+          sleep 5
+          curl --retry 5 --retry-delay 2 --retry-connrefused http://localhost:3000/health
+
+      - name: Install Newman and the HTML reporter
+        run: npm install -g newman newman-reporter-html
+
+      - name: Run Postman collection with Newman
+        id: newman
+        continue-on-error: true
+        run: |
+          newman run techshop.postman_collection.json \
+            --env-var base_url=http://localhost:3000 \
+            --reporters cli,html \
+            --reporter-html-export newman-report.html
+
+      - name: Install Bruno CLI
+        run: npm install -g @usebruno/cli
+
+      - name: Run Bruno collection
+        id: bruno
+        continue-on-error: true
+        run: bru run techshop-bruno/ --env local
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pytest requests pytest-html python-dotenv
+
+      - name: Run pytest
+        id: pytest
+        continue-on-error: true
+        env:
+          BASE_URL: http://localhost:3000
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+        run: |
+          pytest test_techshop.py -v \
+            --html=pytest-report.html \
+            --self-contained-html
+
+      - name: Install Robot Framework dependencies
+        run: pip install robotframework robotframework-requests
+
+      - name: Run Robot Framework
+        id: robot
+        continue-on-error: true
+        env:
+          BASE_URL: http://localhost:3000
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+        run: |
+          robot --variable BASE_URL:http://localhost:3000 \
+                --outputdir robot-results \
+                techshop.robot
+
+      - name: Upload pytest HTML report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pytest-report
+          path: pytest-report.html
+
+      - name: Upload Robot Framework report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot-report
+          path: robot-results/
+
+      - name: Upload Newman report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-report
+          path: newman-report.html
+
+      - name: Final status check — fail the job if any test step failed
+        if: always()
+        run: |
+          if [ "${{ steps.newman.outcome }}" = "failure" ] || \
+             [ "${{ steps.bruno.outcome }}" = "failure" ] || \
+             [ "${{ steps.pytest.outcome }}" = "failure" ] || \
+             [ "${{ steps.robot.outcome }}" = "failure" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
+
