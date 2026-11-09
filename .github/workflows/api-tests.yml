@@ -108,7 +108,18 @@ jobs:
           name: newman-report
           path: newman-report.html
 
-      - name: Final status check — fail the job if any test step failed
+      - name: Pipeline summary
+        if: always()
+        run: |
+          echo "## Test Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Suite | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Newman (Postman) | ${{ steps.newman.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Bruno CLI | ${{ steps.bruno.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| pytest (Python) | ${{ steps.pytest.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Robot Framework | ${{ steps.robot.outcome }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail job if any suite failed
         if: always()
         run: |
           if [ "${{ steps.newman.outcome }}" = "failure" ] || \
@@ -118,4 +129,3 @@ jobs:
             echo "One or more test suites failed"
             exit 1
           fi
-
