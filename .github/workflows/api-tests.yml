@@ -114,17 +114,17 @@ jobs:
           echo "## Test Suite Results" >> $GITHUB_STEP_SUMMARY
           echo "| Suite | Result |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Newman (Postman) | ${{ steps.newman.outcome }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Bruno CLI | ${{ steps.bruno.outcome }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| pytest (Python) | ${{ steps.pytest.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Newman | ${{ steps.newman.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Bruno | ${{ steps.bruno.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| pytest | ${{ steps.pytest.outcome }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Robot Framework | ${{ steps.robot.outcome }} |" >> $GITHUB_STEP_SUMMARY
 
       - name: Fail job if any suite failed
         if: always()
         run: |
-          if [ "${{ steps.newman.outcome }}" = "failure" ] || \
-             [ "${{ steps.bruno.outcome }}" = "failure" ] || \
-             [ "${{ steps.pytest.outcome }}" = "failure" ] || \
+          if [ "${{ steps.newman.outcome }}" = "failure" ] ||
+             [ "${{ steps.bruno.outcome }}" = "failure" ] ||
+             [ "${{ steps.pytest.outcome }}" = "failure" ] ||
              [ "${{ steps.robot.outcome }}" = "failure" ]; then
             echo "One or more test suites failed"
             exit 1
