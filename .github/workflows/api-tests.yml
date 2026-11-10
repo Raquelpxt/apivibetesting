@@ -50,7 +50,8 @@ jobs:
       - name: Run Bruno collection
         id: bruno
         continue-on-error: true
-        run: bru run techshop-bruno/ --env local
+        working-directory: techshop-bruno
+        run: bru run --env local -r
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5

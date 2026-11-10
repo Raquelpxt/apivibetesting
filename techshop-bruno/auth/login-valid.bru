@@ -1,0 +1,33 @@
+meta {
+  name: Login - Valid Credentials
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "demo@techshop.com",
+    "password": "password123"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.token: isDefined
+}
+
+script:post-response {
+  if (res.body && res.body.token) {
+    bru.setEnvVar("authToken", res.body.token);
+  }
+}

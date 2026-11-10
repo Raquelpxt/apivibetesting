@@ -1,0 +1,19 @@
+meta {
+  name: Remove Cart Item
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/cart/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{authToken}}
+}
+
+assert {
+  res.status: eq 200
+}

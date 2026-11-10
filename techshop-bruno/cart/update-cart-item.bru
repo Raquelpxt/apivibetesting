@@ -1,0 +1,26 @@
+meta {
+  name: Update Cart Item
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/cart/1
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+}
+
+body:json {
+  {
+    "quantity": 3
+  }
+}
+
+assert {
+  res.status: eq 200
+}

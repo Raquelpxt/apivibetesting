@@ -1,0 +1,16 @@
+meta {
+  name: Get Products by Category
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/products?category=computers
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isDefined
+}

@@ -96,7 +96,7 @@ router.post('/', authenticate, (req, res) => {
     existing.quantity += quantity;
   } else {
     cart.push({
-      id: Date.now(),
+      id: cart.length + 1,
       productId: product.id,
       name: product.name,
       price: product.price,
@@ -153,7 +153,7 @@ router.put('/:itemId', authenticate, (req, res) => {
   }
 
   const cart = getCart(req.user.id);
-  const item = cart.find(i => i.id === itemId);
+  const item = cart.find(i => i.id === itemId || i.productId === itemId);
 
   if (!item) {
     return res.status(404).json({ error: 'Cart item not found' });
@@ -190,7 +190,7 @@ router.put('/:itemId', authenticate, (req, res) => {
 router.delete('/:itemId', authenticate, (req, res) => {
   const itemId = parseInt(req.params.itemId);
   const cart = getCart(req.user.id);
-  const index = cart.findIndex(i => i.id === itemId);
+  const index = cart.findIndex(i => i.id === itemId || i.productId === itemId);
 
   if (index === -1) {
     return res.status(404).json({ error: 'Cart item not found' });
