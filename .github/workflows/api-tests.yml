@@ -21,11 +21,11 @@ jobs:
 
       - name: Install TechShop API dependencies
         run: npm install
-        working-directory: techshop-api/broken-app
+        working-directory: techshop-api/fixed-app
 
       - name: Start TechShop API in the background
         run: node server.js &
-        working-directory: techshop-api/broken-app
+        working-directory: techshop-api/fixed-app
 
       - name: Wait for the server to be ready
         run: |
